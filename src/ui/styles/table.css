@@ -1,0 +1,223 @@
+/* Table de jeu : Jauge, compteur, plaque, sabots, objets, barre d'actions, effets. */
+
+/* ───────────── Jauge ───────────── */
+.gauge { position: absolute; pointer-events: auto; }
+.gauge-canvas { position: absolute; left: 0; top: 34px; width: 688px; height: 160px; pointer-events: none; }
+.gauge-spec { position: absolute; left: 0; top: 34px; width: 688px; height: 88px; z-index: 2; }
+.gauge-bustflash { position: absolute; height: 60px; background: var(--bordeaux-clair); opacity: 0; pointer-events: none; z-index: 3; }
+.gauge-bustflash.go { animation: bustflash 420ms var(--ease-snap) 1; }
+@keyframes bustflash { 0% { opacity: .95; background: var(--ivoire); } 30% { opacity: .9; background: var(--bordeaux-clair); } 100% { opacity: 0; } }
+.gauge-duel { position: absolute; height: 6px; background: var(--ivoire); pointer-events: none; z-index: 3; outline: 2px solid var(--nuit); }
+.gauge-duel.lead { background: var(--petrole-pale); }
+.gauge-duel.behind { background: var(--cerise); }
+
+.gauge-needle, .gauge-ghost, .gauge-cursor { position: absolute; left: 0; pointer-events: none; z-index: 5; }
+/* aiguille du joueur : épaisse, monte sous la règle et pique dedans */
+.gauge-needle { top: 138px; width: 0; height: 0; }
+.gauge-needle::before {
+  content: ""; position: absolute; left: -12px; top: 0; width: 24px; height: 58px;
+  background: var(--nuit);
+  clip-path: polygon(50% 0, 100% 30%, 75% 30%, 75% 100%, 25% 100%, 25% 30%, 0 30%);
+}
+.gauge-needle::after {
+  content: ""; position: absolute; left: -8px; top: 5px; width: 16px; height: 49px;
+  background: var(--ivoire);
+  clip-path: polygon(50% 0, 100% 26%, 62% 26%, 62% 100%, 38% 100%, 38% 26%, 0 26%);
+}
+.gauge-ghost { top: 176px; width: 0; height: 0; }
+.gauge-ghost::before { content: ""; position: absolute; left: -6px; top: 0; width: 12px; height: 8px; background: var(--cendre-sombre); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.gauge-ghost::after { content: ""; position: absolute; left: -2px; top: 8px; width: 4px; height: 12px; background: var(--cendre-sombre); }
+/* curseur du croupier : un fil qui descend de son étiquette jusqu'à la règle */
+.gauge-cursor { top: 40px; width: 0; height: 0; }
+.gauge-cursor::before { content: ""; position: absolute; left: -3px; top: 0; width: 6px; height: 72px; background: var(--nuit); }
+.gauge-cursor::after {
+  content: ""; position: absolute; left: -12px; top: 62px; width: 24px; height: 20px;
+  background: var(--petrole-pale);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  box-shadow: none;
+}
+.gauge-cursor > i { display: none; }
+.gauge-tag {
+  position: absolute; left: 0; pointer-events: none; white-space: nowrap; z-index: 6;
+  font-family: "Jersey 20"; font-size: 40px; line-height: 1; color: var(--ivoire);
+  text-shadow: 2px 2px 0 var(--nuit);
+  padding: 2px 10px 4px; background: var(--nuit); outline: 2px solid var(--prune-clair); outline-offset: -2px;
+  box-shadow: 0 4px 0 var(--nuit);
+}
+.gauge-tag .who { font-size: 20px; color: var(--cendre); margin-right: 6px; text-shadow: none; }
+.gauge-tag.ptag { top: 190px; }
+.gauge-tag.dtag { top: 0; outline-color: var(--petrole-pale); }
+.gauge-tag.hot { outline-color: var(--cerise); }
+.gauge-tag.bust { background: var(--bordeaux); outline-color: var(--cerise); }
+.gauge-limit {
+  position: absolute; left: 0; top: 128px; font-size: 40px; line-height: 40px; color: var(--laiton-nuit);
+  text-shadow: 0 2px 0 var(--laiton-clair); pointer-events: auto; z-index: 4; padding-right: 2px;
+}
+.gauge-bustword { position: absolute; left: 0; font-size: 22px; line-height: 22px; color: var(--cerise-pale); text-shadow: 2px 2px 0 var(--nuit); pointer-events: auto; z-index: 4; }
+.gauge-housestop { position: absolute; width: 16px; z-index: 4; }
+.gauge-risk { position: absolute; left: 0; top: 0; font-size: 20px; line-height: 20px; color: var(--cerise-pale); text-shadow: 2px 2px 0 var(--nuit); pointer-events: none; z-index: 4; white-space: nowrap; }
+
+/* ───────────── Plaque ───────────── */
+.plaque { position: absolute; padding: 0 6px; }
+.pl-line1 { font-size: 28px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); white-space: nowrap; display: flex; align-items: baseline; justify-content: space-between; }
+.pl-salon { font-size: 20px; color: var(--cendre); text-shadow: none; }
+.pl-steps { position: absolute; right: 6px; top: 6px; display: flex; gap: 4px; }
+.pl-step { width: 10px; height: 10px; background: var(--prune-sombre); outline: 2px solid var(--nuit); }
+.pl-step.done { background: var(--cendre); }
+.pl-step.now { background: var(--ivoire); }
+.pl-step.boss { background: var(--bordeaux); }
+.pl-step.boss.now { background: var(--cerise); }
+.pl-boss { font-size: 30px; color: var(--cerise); text-shadow: 2px 2px 0 var(--nuit); margin-top: 4px; }
+.pl-rule { font-size: 19px; color: var(--ivoire); margin-top: 0; line-height: 1; }
+/* règle du patron trop longue pour 3 lignes : un cran plus petit, jamais coupée */
+.pl-rule.small { font-size: 17px; }
+.pl-row { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
+.pl-lab { font-size: 20px; color: var(--cendre); }
+.pl-target { flex: 0 1 auto; min-width: 0; white-space: nowrap; font-size: 44px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); }
+.pl-reward { font-size: 24px; color: var(--laiton); margin-left: auto; text-shadow: 2px 2px 0 var(--nuit); white-space: nowrap; }
+.pl-bosschip { font-size: 20px; color: var(--cendre); margin-top: 6px; cursor: default; }
+.plaque.is-boss .pl-target { font-size: 36px; }
+.plaque.is-boss .pl-row { margin-top: 0; }
+
+/* ───────────── Compteur ───────────── */
+.score { position: absolute; padding: 0 4px; }
+.sc-head { display: flex; align-items: baseline; justify-content: space-between; height: 34px; }
+.sc-fig { font-size: 30px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); white-space: nowrap; }
+.sc-lvl { font-size: 20px; color: var(--cendre); }
+.score.preview .sc-fig { color: var(--cendre-clair); }
+.sc-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.sc-box { width: 112px; height: 72px; display: flex; align-items: center; justify-content: center; }
+.sc-num { white-space: nowrap; font-size: 44px; text-shadow: 2px 2px 0 var(--nuit); transform-origin: 50% 60%; }
+.sc-box.chips .sc-num { color: var(--menthe); }
+.sc-box.mult .sc-num { color: var(--braise); }
+.score.preview .sc-num { opacity: .55; }
+.sc-x { font-size: 36px; color: var(--cendre); }
+.sc-x.merged { visibility: hidden; }
+.sc-box.broken .sc-num { color: var(--cendre-clair); }
+.sc-box.merged { visibility: hidden; transform: none !important; }
+.sc-result { position: absolute; left: 0; right: 0; top: 40px; height: 76px; display: flex; align-items: center; justify-content: center; font-size: 56px; color: var(--ivoire); text-shadow: 4px 4px 0 var(--nuit); }
+.sc-result.off { visibility: hidden; }
+.sc-hand { white-space: nowrap; display: inline-block; transform-origin: 50% 60%; }
+.sc-flames { position: absolute; left: 60px; top: 14px; width: 128px; height: 48px; visibility: hidden; pointer-events: none; }
+.sc-flames.on { visibility: visible; }
+.sc-table { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+.sc-tlab { font-size: 20px; color: var(--cendre); }
+.sc-tscore { white-space: nowrap; font-size: 36px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); }
+.sc-target { white-space: nowrap; font-size: 24px; color: var(--cendre-clair); }
+.sc-bar { position: relative; height: 16px; margin-top: 6px; background: var(--nuit-clair); outline: 2px solid var(--prune-clair); outline-offset: -2px; }
+.sc-fill { position: absolute; left: 2px; top: 2px; bottom: 2px; width: 0; max-width: calc(100% - 4px); background: var(--ivoire); }
+.sc-fly { position: absolute; left: 0; top: 0; font-size: 44px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); pointer-events: none; z-index: 30; }
+
+/* ───────────── Bande mains / défausses / argent ───────────── */
+.stats { position: absolute; display: flex; gap: 6px; }
+.st-cell { flex: 1; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; }
+.st-val { font-size: 32px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); line-height: .9; }
+.st-lab { font-size: 18px; color: var(--cendre); line-height: 1; }
+.st-cell.money .st-val { color: var(--laiton); }
+
+/* ───────────── Sabots et défausse ───────────── */
+.shoe { position: absolute; cursor: pointer; }
+.shoe-card { position: absolute; left: 0; top: 0; width: 120px; height: 168px; filter: drop-shadow(0 6px 0 var(--nuit)); }
+.shoe.empty .shoe-card { visibility: hidden; }
+.shoe-top { position: absolute; left: 0; top: 0; }
+.shoe-top canvas { position: absolute; left: 0; top: 0; }
+.shoe-count { position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%); font-size: 26px; color: var(--ivoire); text-shadow: 2px 2px 0 var(--nuit); white-space: nowrap; }
+.shoe-dealer .shoe-count { bottom: auto; top: 172px; color: var(--cendre-clair); font-size: 20px; }
+.discard { position: absolute; cursor: pointer; }
+.discard-slot { position: absolute; inset: 4px; border: 2px dashed var(--petrole-clair); opacity: .8; }
+.discard-lab { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font-size: 20px; color: var(--petrole-pale); }
+.discard.has .discard-lab { visibility: hidden; }
+.discard-stack { position: absolute; inset: 0; }
+.discard-card { position: absolute; left: 0; top: 0; width: 120px; height: 168px; filter: drop-shadow(0 4px 0 var(--nuit)); }
+
+/* ───────────── Objets (atouts, poches) ───────────── */
+.item-slot { position: absolute; left: 0; top: 0; width: 60px; height: 84px; opacity: .8; pointer-events: none; }
+.item-count { position: absolute; font-size: 18px; color: var(--cendre); text-align: left; padding-left: 2px; }
+.item-count.under-menu { visibility: hidden; }
+.item-menu { position: absolute; z-index: 1000; transform: translateX(-50%); display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.item-menu .btn { position: relative; white-space: nowrap; }
+
+/* ───────────── Barre d'actions ───────────── */
+.actions { position: absolute; }
+.actions .btn { top: 0; }
+.actions.busy .btn { filter: saturate(.4) brightness(.8); pointer-events: none; }
+.actions-hint { position: absolute; text-align: center; font-size: 22px; color: var(--cendre-clair); text-shadow: 2px 2px 0 var(--nuit); pointer-events: none; }
+.btn.refuse { animation: refuse 260ms var(--ease-snap) 1; }
+@keyframes refuse { 0%, 100% { margin-left: 0; } 25% { margin-left: -6px; } 50% { margin-left: 6px; } 75% { margin-left: -4px; } }
+
+/* ───────────── Effets ───────────── */
+.pop {
+  position: absolute; left: 0; top: 0; white-space: nowrap; pointer-events: none; z-index: 60;
+  font-family: "Jersey 20"; font-size: 32px; line-height: 1; color: var(--ivoire);
+  text-shadow: 2px 2px 0 var(--nuit), -2px 2px 0 var(--nuit), 2px -2px 0 var(--nuit), -2px -2px 0 var(--nuit), 0 4px 0 var(--nuit);
+  transform: translate(-50%, -50%) scale(.3);
+}
+.pop.big { font-size: 40px; }
+.pop-chips { color: var(--menthe); }
+.pop-mult { color: var(--braise); }
+.pop-money { color: var(--laiton); }
+.pop-bad { color: var(--cerise-pale); font-size: 26px; }
+.pop-dim { color: var(--cendre-clair); font-size: 24px; }
+.pop-xmult { color: var(--nuit); background: var(--braise); text-shadow: none; padding: 2px 8px 4px; outline: 2px solid var(--nuit); box-shadow: 0 4px 0 var(--nuit); }
+.announce {
+  position: absolute; left: 640px; top: 340px; white-space: nowrap; pointer-events: none; z-index: 70;
+  font-size: 96px; color: var(--ivoire);
+  text-shadow: 4px 4px 0 var(--nuit), 8px 8px 0 var(--nuit), -2px -2px 0 var(--nuit), 2px -2px 0 var(--nuit), -2px 2px 0 var(--nuit);
+  transform: translate(-50%, -50%);
+}
+.announce.tone-cerise { color: var(--cerise); }
+.announce.tone-bordeaux { color: var(--bordeaux-clair); }
+.announce.tone-laiton { color: var(--laiton); }
+.shard { position: absolute; pointer-events: none; z-index: 65; outline: 2px solid var(--nuit); }
+.flash { position: absolute; inset: 0; pointer-events: none; z-index: 80; opacity: 0; }
+
+/* carte en train de se désagréger */
+.sprite.dying .sprite-inner { filter: brightness(1.6); }
+.sprite.xray .sprite-face { opacity: .72; }
+.sprite.xray .sprite-overlay { background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--petrole-pale) 30%, transparent) 0 4px, transparent 4px 8px); }
+
+/* ───────────── Tampon de verdict ───────────── */
+.verdict {
+  position: absolute; z-index: 55; pointer-events: none; text-align: center;
+  padding: 2px 14px 8px; transform-origin: 50% 50%;
+  border: 4px solid currentColor; outline: 2px solid var(--nuit); outline-offset: 0;
+  background: color-mix(in srgb, var(--nuit) 72%, transparent);
+  box-shadow: 4px 4px 0 var(--nuit);
+  width: auto; height: auto; white-space: nowrap;
+}
+.verdict .vd-title { font-size: 48px; line-height: 1; text-shadow: 4px 4px 0 var(--nuit); }
+.verdict .vd-sub { font-size: 20px; color: var(--ivoire); margin-top: 2px; }
+.verdict.tone-ivoire { color: var(--ivoire); }
+.verdict.tone-petrole { color: var(--petrole-pale); }
+.verdict.tone-cerise { color: var(--cerise); }
+.verdict.tone-cendre { color: var(--cendre-clair); }
+
+/* cartes déjà vues au sommet du sabot (Voyance) */
+.peek-row { position: absolute; pointer-events: auto; }
+.peek-card { position: absolute; top: 0; width: 60px; height: 84px; filter: drop-shadow(0 4px 0 var(--nuit)); }
+
+/* indices de première partie : étiquette Ivoire épinglée */
+.hint { position: absolute; z-index: 75; pointer-events: none; padding: 12px 12px 10px; background: var(--ivoire); color: var(--encre); outline: 2px solid var(--nuit); box-shadow: 4px 4px 0 var(--nuit); transform-origin: 50% 0; }
+.hint-string { position: absolute; height: 2px; margin-top: -1px; background: var(--ivoire-ombre); transform-origin: 0 50%; pointer-events: none; box-shadow: 0 2px 0 var(--nuit); }
+.hint-knot { position: absolute; width: 8px; height: 8px; background: var(--cerise); outline: 2px solid var(--nuit); z-index: 74; pointer-events: none; }
+.hint-pin { position: absolute; left: 50%; top: -6px; width: 12px; height: 12px; margin-left: -6px; background: var(--cerise); outline: 2px solid var(--nuit); box-shadow: inset -4px -4px 0 var(--cerise-sombre); }
+.hint-txt { font-size: 20px; line-height: 1.05; }
+
+/* entrée du patron et éclat de la plaque */
+.boss-drop { position: absolute; left: 0; top: 0; z-index: 80; pointer-events: none; white-space: nowrap; font-size: 88px; color: var(--cerise); text-shadow: 4px 4px 0 var(--nuit), 8px 8px 0 var(--nuit), -2px -2px 0 var(--nuit), 2px -2px 0 var(--nuit), -2px 2px 0 var(--nuit); }
+.plaque.flare::after { content: ""; position: absolute; inset: -12px -12px -16px -12px; outline: 4px solid var(--cerise); animation: plaqueflare 420ms var(--ease-snap) 1 forwards; pointer-events: none; }
+@keyframes plaqueflare { 0% { opacity: 1; outline-offset: 0; } 100% { opacity: 0; outline-offset: 10px; } }
+
+/* butée du croupier : Pétrole, au-dessus de la règle, « il crève » gravé à côté */
+.gauge-dlimit { position: absolute; left: 0; top: 62px; width: 0; height: 60px; z-index: 4; pointer-events: auto; }
+.gdl-post { position: absolute; left: -4px; top: 0; width: 8px; height: 62px; background: var(--petrole-pale); outline: 2px solid var(--nuit); box-shadow: inset -2px 0 0 var(--petrole-clair); }
+.gdl-lab { position: absolute; left: 6px; top: -4px; white-space: nowrap; font-size: 20px; line-height: 20px; padding: 0 6px 2px; color: var(--petrole-pale); background: var(--nuit); outline: 2px solid var(--petrole-clair); outline-offset: -2px; }
+.gauge-dlimit.quiet .gdl-lab { visibility: hidden; }
+.gauge-dlimit.bump .gdl-post { animation: dlbump 360ms var(--ease-arrive) 1; }
+@keyframes dlbump { 0% { transform: translateY(-10px) scaleY(1.2); } 100% { transform: none; } }
+
+/* sabot qu'on bat (remélange) */
+.shoe.shuffle .shoe-card:nth-child(odd) { animation: shufL 300ms var(--ease-snap) 2; }
+.shoe.shuffle .shoe-card:nth-child(even) { animation: shufR 300ms var(--ease-snap) 2; }
+@keyframes shufL { 50% { margin-left: -14px; } }
+@keyframes shufR { 50% { margin-left: 14px; } }

@@ -1,0 +1,65 @@
+/* Objets-cartes de la scène */
+
+.sprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  cursor: default;
+}
+.sprite.clickable { cursor: pointer; }
+.sprite-shadow {
+  position: absolute;
+  inset: 0;
+  background: var(--nuit);
+  --c: calc(var(--sz) * 2px);
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  opacity: .9;
+}
+.sprite-inner { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.sprite-face, .sprite-back, .sprite-overlay { position: absolute; inset: 0; }
+.sprite-overlay { pointer-events: none; overflow: hidden; }
+
+/* carte neutralisée par le patron : hachures Nuit */
+.sprite.debuffed .sprite-overlay {
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--nuit) 70%, transparent) 0 4px, transparent 4px 12px);
+  --c: calc(var(--sz) * 2px);
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+
+/* sélection (ciblage, défausse) */
+.sprite.selectable { cursor: pointer; }
+.sprite.selectable .sprite-shadow { background: var(--petrole-clair); opacity: 1; }
+.sprite.selected .sprite-shadow { background: var(--petrole-pale); opacity: 1; }
+
+/* carte fantôme : ombre plus légère */
+.sprite.ghost .sprite-shadow { opacity: 0; }
+
+/* reflet du cristal : passe une fois à l'arrivée et au survol */
+.sprite .glint {
+  position: absolute;
+  top: -20%;
+  left: -60%;
+  width: 30%;
+  height: 140%;
+  background: color-mix(in srgb, var(--ivoire) 55%, transparent);
+  transform: skewX(-20deg) translateX(0);
+  opacity: 0;
+}
+.sprite .glint.go { animation: glint 520ms var(--ease-snap) 1; }
+@keyframes glint {
+  0% { opacity: 1; transform: skewX(-20deg) translateX(0); }
+  100% { opacity: 1; transform: skewX(-20deg) translateX(560%); }
+}
+
+/* légendaire : le liseré Laiton accroche la lumière au survol */
+.sprite.legendary:hover .glint { animation: glint 620ms var(--ease-snap) 1; }
+
+/* braises qui montent (Ardente) pendant le marquage */
+.ember {
+  position: absolute;
+  width: calc(var(--sz) * 2px);
+  height: calc(var(--sz) * 2px);
+  background: var(--braise);
+}

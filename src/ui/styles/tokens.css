@@ -1,0 +1,55 @@
+/*
+ * SABOT — palette. Seul endroit où un hex a le droit d'exister.
+ * Le canvas et le shader lisent ces variables au démarrage (src/ui/core/palette.ts).
+ */
+:root {
+  /* palette de base (skill sabot-da) */
+  --nuit: #150c1a;
+  --prune: #3d1640;
+  --bordeaux: #7d1f3f;
+  --petrole: #0f4a57;
+  --petrole-clair: #1c7a80;
+  --ivoire: #f4ead4;
+  --encre: #231a2e;
+  --cerise: #d92b4b;
+  --menthe: #5ef0bf;
+  --braise: #ff6a3d;
+  --laiton: #f0b63a;
+  --cendre: #8d7f96;
+
+  /* variantes de relief (assombries / éclaircies) */
+  --nuit-clair: #22142a;
+  --prune-sombre: #2b0f2f;
+  --prune-clair: #5a2461;
+  --bordeaux-sombre: #55142b;
+  --bordeaux-clair: #a3304f;
+  --petrole-sombre: #0a3640;
+  --petrole-pale: #2f9a9c;
+  --petrole-glace: #a8d3c9;
+  --ivoire-sombre: #d8c9a9;
+  --ivoire-ombre: #b9a888;
+  --encre-pale: #cbc0cf;
+  --cerise-sombre: #9e1a35;
+  --cerise-pale: #f1c3bd;
+  --menthe-sombre: #2fa98a;
+  --menthe-nuit: #1d6b58;
+  --braise-sombre: #b8431f;
+  --braise-clair: #ffb08a;
+  --laiton-sombre: #a8761c;
+  --laiton-clair: #ffe08f;
+  --laiton-nuit: #5e3f10;
+  --cendre-sombre: #574b5f;
+  --cendre-clair: #b7abbf;
+  --plomb: #6d6a7c;
+  --plomb-clair: #9a97a8;
+
+  /* unités de scène */
+  --stage-w: 1280px;
+  --stage-h: 720px;
+  --px: 2px; /* un pixel d'art = 2 unités de scène */
+
+  /* courbes : jamais linear ni ease */
+  --ease-arrive: cubic-bezier(.2, .9, .3, 1.2);
+  --ease-leave: cubic-bezier(.6, 0, .9, .4);
+  --ease-snap: cubic-bezier(.2, .8, .2, 1);
+}
